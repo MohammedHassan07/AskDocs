@@ -7,7 +7,8 @@ const otpSchema = new mongoose.Schema(
       ref: "User",
     },
     otp: String,
-    expiresAt: Date,
+
+    ttl: { type: Date, default: Date.now, expires: 600 }
   },
   { timestamps: true }
 );

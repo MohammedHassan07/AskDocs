@@ -13,6 +13,7 @@ export async function POST(req: Request) {
         { status: 409 }
       );
     }
+    console.log(err)
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

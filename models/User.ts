@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, unique: true },
     passwordHash: String,
     isVerified: { type: Boolean, default: false },
+    verificationExpiresAt: Date
   },
   { timestamps: true }
 );

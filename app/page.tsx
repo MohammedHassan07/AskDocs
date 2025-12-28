@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/common/dashboard/DashboardLayout";
 import ChatWindow from "@/components/common/dashboard/ChatWindow";
 
 import LoginPage from "./(auth)/login/page";
+import RegisterPage from "./(auth)/register/page";
 
 export default function Home() {
   return (
@@ -11,7 +12,8 @@ export default function Home() {
       <DashboardLayout>
         <ChatWindow />
       </DashboardLayout>
-      <LoginPage />
+      {/* <LoginPage /> */}
+      <RegisterPage />
     </div>
   );
 }
