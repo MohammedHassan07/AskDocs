@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const result = await registerUser(body);
     return NextResponse.json(result);
   } catch (err: any) {
-    if (err.message === "USER_EXISTS") {
+    if (err.message === "USER_ALREADY_EXISTS") {
       return NextResponse.json(
         { message: "User already exists" },
         { status: 409 }

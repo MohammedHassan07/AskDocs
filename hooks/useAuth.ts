@@ -43,10 +43,20 @@ export function useAuth() {
             setLoading(false);
         }
     };
+ 
+    const verifyOtp = async (data: { userId: string; otp: string }) => {
+        setLoading(true);
+        try {
+            return await authApi.verifyOtp(data);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return {
         register,
         login,
+        verifyOtp,
         loading,
         error,
     };

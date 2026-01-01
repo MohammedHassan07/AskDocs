@@ -8,10 +8,10 @@ import RegisterPage from "./(auth)/register/page";
 export default function Home() {
   return (
     <div>
-
+{/* 
       <DashboardLayout>
         <ChatWindow />
-      </DashboardLayout>
+      </DashboardLayout> */}
       {/* <LoginPage /> */}
       <RegisterPage />
     </div>
