@@ -3,7 +3,9 @@ import { connectDB } from "@/lib/db";
 import { getAuthUser } from "@/app/lib/auth";
 import { savePdfToLocal } from "@/lib/storage/local.storage";
 import Document from "@/models/Document";
+import { createDocument } from "@/app/server/services/document.service";
 import Message from "@/models/Message";
+import { Types } from "mongoose";
 
 export async function POST(
   req: Request,
@@ -12,9 +14,9 @@ export async function POST(
   const { chatId } = await params;
   const user = await getAuthUser();
 
-  if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
+  // if (!user) {
+  //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  // }
 
   await connectDB();
 
@@ -27,6 +29,15 @@ export async function POST(
 
   const stored = await savePdfToLocal(file);
 
+  console.log({
+    chatId,
+    uploadedBy: user?.id,
+    originalName: file.name,
+    fileName: stored.name,
+    filePath: stored.path,
+    mimeType: file.type,
+    size: file.size,
+  })
   const document = await Document.create({
     chatId,
     uploadedBy: user.id,
@@ -43,6 +54,15 @@ export async function POST(
     type: "file",
     documentId: document._id,
   });
+
+  const doc = await createDocument({
+    chatId,
+    fileName: file.name,
+    filePath: stored.path,
+    mimeType: file.type,
+  });
+
+  // return NextResponse.json(doc);
 
   return NextResponse.json({
     id: message._id,
