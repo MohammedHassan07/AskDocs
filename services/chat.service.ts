@@ -2,7 +2,7 @@ export async function uploadChatPdf(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch("/api/chat/upload", {
+  const res = await fetch("/api/upload", {
     method: "POST",
     body: formData,
   });
