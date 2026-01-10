@@ -6,7 +6,7 @@ export function ChatInput({
   onFileSelect,
 }: {
   onSend?: (message: string) => void;
-  onFileSelect: (file: File) => void;
+  onFileSelect?: (file: File) => void;
 }) {
   const [message, setMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,7 +34,7 @@ export function ChatInput({
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) onFileSelect(file);
+          if (file && onFileSelect) onFileSelect(file);
         }}
       />
 

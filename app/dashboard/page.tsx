@@ -4,7 +4,7 @@ import ChatWindow from "@/components/common/dashboard/ChatWindow";
 export default function DashboardPage() {
   return (
     <DashboardLayout>
-      <ChatWindow />
+      <ChatWindow chatId="jdf" />
     </DashboardLayout>
   );
 }

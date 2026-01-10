@@ -14,9 +14,9 @@ export async function GET(
     const { chatId } = await params;
 
     const user = await getAuthUser();
-    if (!user) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+    // if (!user) {
+    //     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    // }
 
     const messages = await getChatMessages(chatId);
     return NextResponse.json(messages);
@@ -32,12 +32,13 @@ export async function POST(
 
 
     const user = await getAuthUser();
-      if (!user) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-      }
+    //   if (!user) {
+    //     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    //   }
 
     const body = await req.json();
-    console.log(chatId)
+    console.log(body)
+    
     const message = await addMessageToChat({
         chatId: chatId,
         role: body.role,

@@ -1,8 +1,11 @@
-export async function uploadChatPdf(file: File) {
+import { apiFetch } from "@/lib/api/client";
+import { ChatMessageType } from "@/types/chat";
+
+export async function uploadChatPdf(chatId: string, file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch("/api/upload", {
+  const res = await fetch(`/api/chat/${chatId}/upload`, {
     method: "POST",
     body: formData,
   });
@@ -22,4 +25,20 @@ export async function uploadChatPdf(file: File) {
   }
 
   return res.json();
+}
+
+
+export async function getChatMessages(chatId: string) {
+  return apiFetch<ChatMessageType[]>(`/api/chat/${chatId}/messages`);
+}
+
+export async function sendChatMessage(
+  chatId: string,
+  data: {}
+) {
+
+  return apiFetch<ChatMessageType>(`/api/chat/${chatId}/messages`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }

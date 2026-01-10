@@ -14,13 +14,12 @@ export interface MessageDocument {
   createdAt: Date;
 }
 
-const MessageSchema = new Schema<MessageDocument>(
+const MessageSchema = new Schema(
   {
     chatId: {
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Chat",
       required: true,
-      index: true,
     },
     role: {
       type: String,
@@ -33,8 +32,11 @@ const MessageSchema = new Schema<MessageDocument>(
       required: true,
     },
     content: String,
-    fileName: String,
-    filePath: String,
+
+    documentId: {
+      type: Types.ObjectId,
+      ref: "Document",
+    },
   },
   { timestamps: true }
 );

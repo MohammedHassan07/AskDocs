@@ -1,17 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import ChatMessage from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
-import { uploadChatPdf } from "@/services/chat.service";
+import {
+  getChatMessages,
+  sendChatMessage,
+  uploadChatPdf,
+} from "@/services/chat.service";
 import { ChatMessageType } from "@/types/chat";
 
-export default function ChatWindow() {
+export default function ChatWindow({ chatId }: { chatId: string }) {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleFileUpload = async (file: File) => {
+  // Load chat history
+  useEffect(() => {
+    const loadMessages = async () => {
+      try {
+        const data = await getChatMessages(chatId);
+        setMessages(data);
+      } catch {
+        toast.error("Failed to load messages");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMessages();
+  }, [chatId]);
+
+  // ✅ TEXT MESSAGE
+  const handleSendText = async (text: string) => {
+    const tempId = crypto.randomUUID();
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: tempId,
+        role: "user",
+        type: "text",
+        content: text,
+        status: "sending",
+      },
+    ]);
+
+    try {
+      const savedMessage = await sendChatMessage(chatId, {
+        role: "user",
+        type: "text",
+        content: text,
+      });
+
+      setMessages((prev) =>
+        prev.map((m) => (m.id === tempId ? savedMessage : m))
+      );
+    } catch {
+      toast.error("Message failed");
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+    }
+  };
+
+  // ✅ FILE MESSAGE
+  const handleSendFile = async (file: File) => {
     const tempId = crypto.randomUUID();
 
     setMessages((prev) => [
@@ -26,23 +79,20 @@ export default function ChatWindow() {
     ]);
 
     try {
-      const fileMessage = await uploadChatPdf(file);
+      const savedMessage = await uploadChatPdf(chatId, file);
 
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === tempId
-            ? { ...msg, ...fileMessage, status: "done" }
-            : msg
-        )
+        prev.map((m) => (m.id === tempId ? savedMessage : m))
       );
 
-      toast.success("PDF uploaded successfully");
-    } catch (error: any) {
-      console.log(error)
-      toast.error(error.message);
+      toast.success("PDF uploaded");
+    } catch {
+      toast.error("Upload failed");
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
     }
   };
+
+  if (loading) return <p className="p-4">Loading chat...</p>;
 
   return (
     <div className="flex flex-col h-full">
@@ -53,7 +103,10 @@ export default function ChatWindow() {
       </div>
 
       <div className="border-t p-4">
-        <ChatInput onFileSelect={handleFileUpload} />
+        <ChatInput
+          onSend={handleSendText}
+          onFileSelect={handleSendFile}
+        />
       </div>
     </div>
   );

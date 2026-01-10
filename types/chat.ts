@@ -4,5 +4,15 @@ export type ChatMessageType = {
   type: "text" | "file";
   content?: string;
   fileName?: string;
-  status?: "uploading" | "done";
+  status?: | "sending"
+  | "uploading"
+  | "done"
+  | "failed";
 };
+
+export interface ChatSummary {
+  _id: string;
+  title: string;
+  updatedAt: string;
+}
+
