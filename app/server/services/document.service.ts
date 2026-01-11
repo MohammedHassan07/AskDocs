@@ -1,16 +1,7 @@
-import  Document  from "@/models/Document";
 import { processPdfDocument } from "@/langchain/processPdf";
 
-export async function createDocument(data: {
-  chatId: string;
-  fileName: string;
-  filePath: string;
-  mimeType: string;
-}) {
+export async function createDocument(docId: string){
     
-  const doc = await Document.create(data);
 
-  processPdfDocument(doc._id.toString()).catch(console.error);
-
-  return doc;
+  processPdfDocument(docId.toString()).catch(console.error);
 }

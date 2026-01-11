@@ -5,7 +5,6 @@ import { savePdfToLocal } from "@/lib/storage/local.storage";
 import Document from "@/models/Document";
 import { createDocument } from "@/app/server/services/document.service";
 import Message from "@/models/Message";
-import { Types } from "mongoose";
 
 export async function POST(
   req: Request,
@@ -29,18 +28,9 @@ export async function POST(
 
   const stored = await savePdfToLocal(file);
 
-  console.log({
-    chatId,
-    uploadedBy: user?.id,
-    originalName: file.name,
-    fileName: stored.name,
-    filePath: stored.path,
-    mimeType: file.type,
-    size: file.size,
-  })
   const document = await Document.create({
     chatId,
-    uploadedBy: user.id,
+    uploadedBy: '695134ffa8ef7cb250ae9f13',
     originalName: file.name,
     fileName: stored.name,
     filePath: stored.path,
@@ -53,16 +43,11 @@ export async function POST(
     role: "user",
     type: "file",
     documentId: document._id,
+    uploadedBy: '695134ffa8ef7cb250ae9f13',
   });
 
-  const doc = await createDocument({
-    chatId,
-    fileName: file.name,
-    filePath: stored.path,
-    mimeType: file.type,
-  });
 
-  // return NextResponse.json(doc);
+  await createDocument(document._id);
 
   return NextResponse.json({
     id: message._id,

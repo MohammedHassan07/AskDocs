@@ -1,4 +1,4 @@
-import { getChatMessages } from "../../../../server/services/chat.service";
+import { askQuestionAndSave, getChatMessages } from "../../../../server/services/chat.service";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { addMessageToChat } from "../../../../server/services/chat.service";
@@ -7,7 +7,7 @@ import { getAuthUser } from "@/app/lib/auth";
 
 export async function GET(
     req: Request,
-   { params }: { params: Promise<{ chatId: string }> }
+    { params }: { params: Promise<{ chatId: string }> }
 ) {
     await connectDB();
 
@@ -24,8 +24,8 @@ export async function GET(
 
 export async function POST(
     req: Request,
-   
-   { params }: { params: Promise<{ chatId: string }> }
+
+    { params }: { params: Promise<{ chatId: string }> }
 ) {
     await connectDB();
     const { chatId } = await params;
@@ -37,8 +37,7 @@ export async function POST(
     //   }
 
     const body = await req.json();
-    console.log(body)
-    
+
     const message = await addMessageToChat({
         chatId: chatId,
         role: body.role,
@@ -47,6 +46,15 @@ export async function POST(
         fileName: body.fileName,
         filePath: body.filePath,
     });
+
+    if (body.type === "text") {
+        const aiMessage = await askQuestionAndSave({
+            chatId,
+            question: body.content,
+        });
+
+        return NextResponse.json(aiMessage);
+    }
 
     return NextResponse.json(message);
 }

@@ -1,15 +1,29 @@
 // models/Document.ts
 import mongoose, { Schema, Types } from "mongoose";
 
+interface Document {
+
+  chatId: Types.ObjectId;
+  uploadedBy: Types.ObjectId
+  originalName: string,
+  fileName: string,
+  filePath: string,
+  mimeType: string,
+  size: Number,
+  status: string,
+
+  createdAt: string
+}
+
 const DocumentSchema = new Schema(
   {
     chatId: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Chat",
       required: true,
     },
     uploadedBy: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -28,4 +42,4 @@ const DocumentSchema = new Schema(
 );
 
 export default mongoose.models.Document ||
-  mongoose.model("Document", DocumentSchema);
+  mongoose.model<Document>("Document", DocumentSchema);
