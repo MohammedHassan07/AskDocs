@@ -7,7 +7,7 @@ import ChatList from "./ChatList";
 export const dummyChats = [
   {
     _id: "696221878827e2d267433e11", // your specified ID
-    title: "Invoice PDF Analysis",
+    title: "Intro to Data Science",
     updatedAt: new Date().toISOString(),
   },
   {

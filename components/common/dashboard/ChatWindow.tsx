@@ -32,7 +32,6 @@ export default function ChatWindow({ chatId }: { chatId: string }) {
     loadMessages();
   }, [chatId]);
 
-  // ✅ TEXT MESSAGE
   const handleSendText = async (text: string) => {
     const tempId = crypto.randomUUID();
 
@@ -43,25 +42,25 @@ export default function ChatWindow({ chatId }: { chatId: string }) {
         role: "user",
         type: "text",
         content: text,
-        status: "sending",
       },
     ]);
 
     try {
-      const savedMessage = await sendChatMessage(chatId, {
+      // 2️⃣ Send to backend (backend returns AI message ONLY)
+      const assistantMessage = await sendChatMessage(chatId, {
         role: "user",
         type: "text",
         content: text,
       });
 
-      setMessages((prev) =>
-        prev.map((m) => (m.id === tempId ? savedMessage : m))
-      );
+      // 3️⃣ Append AI message (IMPORTANT)
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch {
       toast.error("Message failed");
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
     }
   };
+
 
   // ✅ FILE MESSAGE
   const handleSendFile = async (file: File) => {
